@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TouchManager : MonoBehaviour
 {
+    //test
     [SerializeField] private LevelPlayer levelPlayer;
 
     private void Awake()
