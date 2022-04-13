@@ -43,21 +43,23 @@ public class Note : MonoBehaviour
         {
             case JUDG.PERFECT:
 
-                Debug.Log("perfect");
-                Destroy(this.gameObject);
+                Delete();
                 break;
 
             case JUDG.GOOD:
 
-                Debug.Log("good");
-                Destroy(this.gameObject);
+                Delete();
                 break;
 
             case JUDG.MISS:
 
-                Debug.Log("miss");
-                Destroy(this.gameObject);
+                Delete();
                 break;
         }
+    }
+
+    private void Delete()
+    {
+        Destroy(this.gameObject);
     }
 }

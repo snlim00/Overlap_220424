@@ -5,6 +5,7 @@ using UnityEngine;
 public class TouchManager : MonoBehaviour
 {
     [SerializeField] private LevelPlayer levelPlayer;
+    [SerializeField] private ParticleManager particleMgr;
 
     private void Awake()
     {
@@ -110,5 +111,6 @@ public class TouchManager : MonoBehaviour
         {
             clearedNoteArr[i].Clear(judg);
         }
+        particleMgr.ParticleGeneration(judg);
     }
 }
