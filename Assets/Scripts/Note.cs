@@ -29,11 +29,35 @@ public class Note : MonoBehaviour
         Move();
     }
 
-    void Move()
+    private void Move()
     {
         if (doMove == false)
             return;
 
         transform.Translate(Level.S.noteSpeed * Time.deltaTime, 0, 0);
+    }
+
+    public void Clear(int judg)
+    {
+        switch(judg)
+        {
+            case JUDG.PERFECT:
+
+                Debug.Log("perfect");
+                Destroy(this.gameObject);
+                break;
+
+            case JUDG.GOOD:
+
+                Debug.Log("good");
+                Destroy(this.gameObject);
+                break;
+
+            case JUDG.MISS:
+
+                Debug.Log("miss");
+                Destroy(this.gameObject);
+                break;
+        }
     }
 }

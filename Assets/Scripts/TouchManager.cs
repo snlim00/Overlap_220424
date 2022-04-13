@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TouchManager : MonoBehaviour
 {
-    //test
     [SerializeField] private LevelPlayer levelPlayer;
 
     private void Awake()
@@ -35,7 +34,7 @@ public class TouchManager : MonoBehaviour
         }
     }
 
-    private List<Note> hitNoteArr;
+    [SerializeField] private List<Note> hitNoteArr;
     private List<Note> clearedNoteArr;
     private void Touch()
     {
@@ -48,14 +47,34 @@ public class TouchManager : MonoBehaviour
         if (hitNoteArr.Count <= 0)
             return;
 
+        //inputCount의 최대치를 hitNoteArr의 수로 하여 배열 초과 방지 
+        //if(inputCount > hitNoteArr.Count)
+        //{
+        //    inputCount = hitNoteArr.Count;
+        //}
+
         //퍼펙트 판정인 노트가 있는지 확인
-        CheckJudg(JUDG.PERFECT);
+        if (CheckJudg(JUDG.PERFECT) == true)
+        {
+            ClearNote(JUDG.PERFECT);
+        }
+        else if(CheckJudg(JUDG.GOOD) == true)
+        {
+            ClearNote(JUDG.GOOD);
+        }
+        else if(CheckJudg(JUDG.MISS) == true)
+        {
+            ClearNote(JUDG.MISS);
+        }
     }
 
     private void GetAroundNote()
     {
         Collider2D[] hitObjectArr = Physics2D.OverlapCircleAll(Vector2.zero, Level.S.noteSpeed * (Level.S.judgRange[JUDG.MISS] * 0.001f * 1.1f));
         hitNoteArr.Clear();
+        
+        hitNoteArr.Sort((Note x, Note y) => x.timing.CompareTo(y.num));
+
         clearedNoteArr.Clear();
 
         //가져온 오브젝트 중 노트만 저장
@@ -70,18 +89,26 @@ public class TouchManager : MonoBehaviour
 
     private bool CheckJudg(int judg)
     {
+        bool isClear = false;
+
         for (int i = 0; i < hitNoteArr.Count; ++i)
         {
-            if ((hitNoteArr[i].timing - levelPlayer.t) <= Level.S.judgRange[judg])
+            if (Mathf.Abs(hitNoteArr[i].timing - (float)levelPlayer.t) <= Level.S.judgRange[judg] * 0.001f)
             {
                 clearedNoteArr.Add(hitNoteArr[i]);
+                //Debug.Log(hitNoteArr[i].timing - levelPlayer.t);
+                isClear = true;
             }
         }
 
-        if (clearedNoteArr.Count > 0)
-            return true;
+        return isClear;
+    }
 
-        else
-            return false;
+    private void ClearNote(int judg)
+    {
+        for (int i = 0; i < inputCount && i < clearedNoteArr.Count; ++i)
+        {
+            clearedNoteArr[i].Clear(judg);
+        }
     }
 }
