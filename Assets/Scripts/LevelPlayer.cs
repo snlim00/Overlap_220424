@@ -90,8 +90,8 @@ public class LevelPlayer : MonoBehaviour
                             Note note = Instantiate(notePref[NOTE_TYPE.TAP]).GetComponent<Note>();
 
                             int angle = thisRow[KEY.ANGLE];
-                            float timing = (thisRow[KEY.TIMING] + Level.S.startDelay) * 0.001f;
-                            float spawnDis = Level.S.noteSpeed * (timing + Level.S.startDelay);
+                            float timing = (thisRow[KEY.TIMING] * 0.001f) + Level.S.startDelay;
+                            float spawnDis = Level.S.noteSpeed * timing;
 
                             note.Execute(angle, thisRow[KEY.TIMING] * 0.001f, spawnDis, noteNum);
                         }

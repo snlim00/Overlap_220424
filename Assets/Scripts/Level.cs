@@ -80,6 +80,13 @@ public class Level : MonoBehaviour
 
         ReadLevelInfo();
 
+        this.offset = levelInfo[0][INFO_KEY.OFFSET] * 0.001f;
+        this.startDelay = levelInfo[0][INFO_KEY.START_DELAY] * 0.001f;
+        this.bpm = levelInfo[0][INFO_KEY.BPM];
+        this.judgRange[JUDG.PERFECT] = levelInfo[0][INFO_KEY.JUDG_RANGE] * 0.001f; //판정 범위는 perfect를 기준으로 하여 일정 비율로 다른 판정 범위를 결정함.
+        this.judgRange[JUDG.GOOD] = judgRange[JUDG.PERFECT] * 2;
+        this.judgRange[JUDG.MISS] = judgRange[JUDG.PERFECT] * 3f;
+
         return this.levelName;
     }
 
@@ -114,13 +121,6 @@ public class Level : MonoBehaviour
 
         //레벨 정보 파일 자료형 변환 List<Dictionary<string, object>> -> List<Dictionary<int,int>>
         ConvertLevelInfo(tempLevelInfo);
-
-        this.offset = levelInfo[0][INFO_KEY.OFFSET];
-        this.startDelay = levelInfo[0][INFO_KEY.START_DELAY];
-        this.bpm = levelInfo[0][INFO_KEY.BPM];
-        this.judgRange[JUDG.PERFECT] = levelInfo[0][INFO_KEY.JUDG_RANGE]; //판정 범위는 perfect를 기준으로 하여 일정 비율로 다른 판정 범위를 결정함.
-        this.judgRange[JUDG.GOOD] = judgRange[JUDG.PERFECT] * 2;
-        this.judgRange[JUDG.MISS] = judgRange[JUDG.PERFECT] * 3.5f;
     }
 
     private void ConvertLevelInfo(List<Dictionary<string, object>> tempLevelInfo)
