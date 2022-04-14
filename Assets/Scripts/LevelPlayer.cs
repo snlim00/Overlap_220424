@@ -6,6 +6,8 @@ public class LevelPlayer : MonoBehaviour
 {
     [SerializeField] private GameObject[] notePref;
 
+    private TimeLineManager tlManager;
+
     public double t;
 
     private AudioSource audioSource;
@@ -13,9 +15,13 @@ public class LevelPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        tlManager = FindObjectOfType<TimeLineManager>();
+
         audioSource = GetComponent<AudioSource>();
 
         audioSource.clip = Resources.Load<AudioClip>(Level.S.ReadLevel("MeteorStream", DIF.X));
+
+        tlManager.DrawGrid();
 
         NoteGeneration();
 
@@ -75,8 +81,6 @@ public class LevelPlayer : MonoBehaviour
 
     void NoteGeneration()
     {
-        int noteNum = 0;
-
         for(int row = 0; row < Level.S.level.Count; ++row)
         {
             Dictionary<int, int> thisRow = Level.S.level[row];
@@ -96,11 +100,10 @@ public class LevelPlayer : MonoBehaviour
                             float spawnDis = Level.S.noteSpeed * timing;
 
                             note.num = row;
-                            note.Execute(angle, thisRow[KEY.TIMING] * 0.001f, spawnDis, noteNum);
+                            note.Execute(angle, thisRow[KEY.TIMING] * 0.001f, spawnDis);
                         }
                         break;
                 }
-                noteNum += 1;
 
                 Level.S.noteList.Add(note);
             }

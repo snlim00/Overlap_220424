@@ -11,7 +11,7 @@ public class Note : MonoBehaviour
 
     protected bool doMove = false;
 
-    public void Execute(int angle, float timing, float spawnDis, float num)
+    public void Execute(int angle, float timing, float spawnDis)
     {
         this.angle = angle + 90;
         this.timing = timing;
