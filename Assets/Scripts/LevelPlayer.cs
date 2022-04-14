@@ -83,21 +83,26 @@ public class LevelPlayer : MonoBehaviour
             
             if (thisRow[KEY.TYPE] == TYPE.NOTE) //노트 생성
             {
+                Note note = null;
+
                 switch (thisRow[KEY.NOTE_TYPE])
                 {
                     case NOTE_TYPE.TAP:
                         {
-                            Note note = Instantiate(notePref[NOTE_TYPE.TAP]).GetComponent<Note>();
+                            note = Instantiate(notePref[NOTE_TYPE.TAP]).GetComponent<Note>();
 
                             int angle = thisRow[KEY.ANGLE];
                             float timing = (thisRow[KEY.TIMING] * 0.001f) + Level.S.startDelay;
                             float spawnDis = Level.S.noteSpeed * timing;
 
+                            note.num = row;
                             note.Execute(angle, thisRow[KEY.TIMING] * 0.001f, spawnDis, noteNum);
                         }
                         break;
                 }
                 noteNum += 1;
+
+                Level.S.noteList.Add(note);
             }
         }
     }

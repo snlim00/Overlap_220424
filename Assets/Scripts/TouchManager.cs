@@ -14,8 +14,8 @@ public class TouchManager : MonoBehaviour
 
     private void Init()
     {
-        hitNoteArr = new List<Note>();
-        clearedNoteArr = new List<Note>();
+        hitNoteList = new List<Note>();
+        clearedNoteList = new List<Note>();
     }
 
     [SerializeField] private int inputCount = 0;
@@ -35,8 +35,8 @@ public class TouchManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private List<Note> hitNoteArr;
-    private List<Note> clearedNoteArr;
+    [SerializeField] private List<Note> hitNoteList;
+    private List<Note> clearedNoteList;
     private void Touch()
     {
         inputCount = Input.inputString.Length; //입력된 터치 수 확인
@@ -45,7 +45,7 @@ public class TouchManager : MonoBehaviour
         GetAroundNote();
 
         //가져온 노트가 0개라면 함수 종료
-        if (hitNoteArr.Count <= 0)
+        if (hitNoteList.Count <= 0)
             return;
 
         //퍼펙트 판정인 노트가 있는지 확인
@@ -65,32 +65,29 @@ public class TouchManager : MonoBehaviour
 
     private void GetAroundNote()
     {
-        Collider2D[] hitObjectArr = Physics2D.OverlapCircleAll(Vector2.zero, Level.S.noteSpeed * Level.S.judgRange[JUDG.MISS] * 1.1f);
-        hitNoteArr.Clear();
-        
-        hitNoteArr.Sort((Note x, Note y) => x.timing.CompareTo(y.num));
+        hitNoteList.Clear();
 
-        clearedNoteArr.Clear();
-
-        //가져온 오브젝트 중 노트만 저장
-        for (int i = 0; i < hitObjectArr.Length; ++i)
+        for(int i = 0; ; ++i)
         {
-            if (hitObjectArr[i].tag == TAG.NOTE)
+            if (Level.S.noteList[i].timing - levelPlayer.t <= Level.S.judgRange[JUDG.MISS] * 1.3f)
             {
-                hitNoteArr.Add(hitObjectArr[i].GetComponent<Note>());
+                hitNoteList.Add(Level.S.noteList[i]);
             }
+            else break;
         }
+
+        clearedNoteList.Clear();
     }
 
     private bool CheckJudg(int judg)
     {
         bool isClear = false;
 
-        for (int i = 0; i < hitNoteArr.Count; ++i)
+        for (int i = 0; i < hitNoteList.Count; ++i)
         {
-            if (Mathf.Abs(hitNoteArr[i].timing - (float)levelPlayer.t) <= Level.S.judgRange[judg])
+            if (Mathf.Abs(hitNoteList[i].timing - (float)levelPlayer.t) <= Level.S.judgRange[judg])
             {
-                clearedNoteArr.Add(hitNoteArr[i]);
+                clearedNoteList.Add(hitNoteList[i]);
                 //Debug.Log(hitNoteArr[i].timing - levelPlayer.t);
                 isClear = true;
             }
@@ -101,9 +98,9 @@ public class TouchManager : MonoBehaviour
 
     private void ClearNote(int judg)
     {
-        for (int i = 0; i < inputCount && i < clearedNoteArr.Count; ++i)
+        for (int i = 0; i < inputCount && i < clearedNoteList.Count; ++i)
         {
-            clearedNoteArr[i].Clear(judg);
+            clearedNoteList[i].Clear(judg);
         }
 
         particleMgr.ParticleGeneration(judg);

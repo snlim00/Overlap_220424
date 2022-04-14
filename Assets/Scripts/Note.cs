@@ -60,6 +60,8 @@ public class Note : MonoBehaviour
 
     private void Delete()
     {
+        Level.S.noteList.Remove(this);
+
         Destroy(this.gameObject);
     }
 }

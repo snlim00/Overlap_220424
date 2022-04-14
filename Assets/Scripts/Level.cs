@@ -22,12 +22,16 @@ public class Level : MonoBehaviour
         level = new List<Dictionary<int, int>>();
         levelInfo = new List<Dictionary<int, int>>();
 
+        noteList = new List<Note>();
+
         judgRange = new float[3];
     }
 
 
     public List<Dictionary<int, int>> level; //Timing을 기반으로 하는 레벨 파일을 담아둠
     public List<Dictionary<int, int>> levelInfo; //레벨의 기본 정보들을 담아둠 (오프셋, 딜레이, BPM 등)
+
+    public List<Note> noteList;
 
     //선택된 레벨의 이름과 난이도
     public string levelName;
