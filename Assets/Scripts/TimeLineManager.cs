@@ -45,6 +45,7 @@ public class TimeLineManager : MonoBehaviour
 
     public void DrawGrid()
     {
+        //1000개(임시)의 그리드 그리기
         for(int i = 0; i < 1000; ++i)
         {
             GameObject grid = Instantiate(gridPrefab) as GameObject;
@@ -52,11 +53,13 @@ public class TimeLineManager : MonoBehaviour
             grid.transform.SetParent(timeLine.transform);
             grid.transform.localScale = Vector3.one; 
 
-            //grid.transform.localPosition = new Vector2(60 / Level.S.bpm * i * interval * (1 / beat), 0); 
             grid.transform.localPosition = new Vector2(60 / Level.S.bpm * (1 / beat) * interval * i, 0);
 
+            //4번째 그리드 붉은 색으로 강조
             if (i % 4 == 0)
                 grid.GetComponent<Image>().color = Color.red;
+            else if (i % 2 == 0)
+                grid.GetComponent<Image>().color = Color.yellow;
         }
 
         TLNoteGeneration();
