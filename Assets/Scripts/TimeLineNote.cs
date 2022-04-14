@@ -8,11 +8,11 @@ public class TimeLineNote : MonoBehaviour
 {
     public int num;
 
-    public Dictionary<int, int> info;
+    public Dictionary<int, int> info = new Dictionary<int, int>();
 
     void Awake()
     {
-        info = new Dictionary<int, int>();
+        
     }
 
     public void Setting(Dictionary<int, int> info)

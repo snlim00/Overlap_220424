@@ -7,16 +7,10 @@ public class TouchManager : MonoBehaviour
     [SerializeField] private LevelPlayer levelPlayer;
     [SerializeField] private ParticleManager particleMgr;
 
-    private void Awake()
-    {
-        Init();
-    }
 
-    private void Init()
-    {
-        hitNoteList = new List<Note>();
-        clearedNoteList = new List<Note>();
-    }
+    [SerializeField] private List<Note> hitNoteList = new List<Note>();
+    private List<Note> clearedNoteList = new List<Note>();
+
 
     [SerializeField] private int inputCount = 0;
 
@@ -35,8 +29,6 @@ public class TouchManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private List<Note> hitNoteList;
-    private List<Note> clearedNoteList;
     private void Touch()
     {
         inputCount = Input.inputString.Length; //입력된 터치 수 확인
