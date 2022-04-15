@@ -39,6 +39,8 @@ public class Level : MonoBehaviour
     public float startDelay;
     public float bpm;
 
+    public float songLength;
+
     public float noteSpeed;
 
     public float[] judgRange;

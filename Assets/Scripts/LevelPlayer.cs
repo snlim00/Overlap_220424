@@ -19,9 +19,13 @@ public class LevelPlayer : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
 
+        //ReadLevel이 곡의 이름에서 공백을 제거하여 string으로 반환, 이후 해당 문자열로 곡 파일 탐색
         audioSource.clip = Resources.Load<AudioClip>(Level.S.ReadLevel("MeteorStream", DIF.X));
 
+        Level.S.songLength = audioSource.clip.length;
+
         tlManager.DrawGrid();
+        tlManager.TLNoteGeneration();
 
         NoteGeneration();
 
