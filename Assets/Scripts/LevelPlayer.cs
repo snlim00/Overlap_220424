@@ -15,8 +15,6 @@ public class LevelPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tlManager = FindObjectOfType<TimeLineManager>();
-
         audioSource = GetComponent<AudioSource>();
 
         //ReadLevel이 곡의 이름에서 공백을 제거하여 string으로 반환, 이후 해당 문자열로 곡 파일 탐색
@@ -24,8 +22,15 @@ public class LevelPlayer : MonoBehaviour
 
         Level.S.songLength = audioSource.clip.length;
 
-        tlManager.DrawGrid();
-        tlManager.TLNoteGeneration();
+        tlManager = FindObjectOfType<TimeLineManager>();
+        if (PlayerSetting.S.editerMode == true)
+        {
+            tlManager.Init();
+        }
+        else
+        {
+            tlManager.gameObject.SetActive(false);
+        }
 
         NoteGeneration();
 

@@ -83,6 +83,8 @@ public static class KEY
     public const int DURATION = 5;
     public static readonly int[] VALUE = { 6, 7, 8, 9, 10 };
 
+    public const int LAST_NUM = 11;
+
     public static string FindName(int value)
     {
         switch (value)
@@ -118,6 +120,7 @@ public static class KEY
                 return "";
         }
     }
+
 }
 
 public static class TYPE

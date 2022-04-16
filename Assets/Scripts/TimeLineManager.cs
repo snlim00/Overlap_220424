@@ -44,6 +44,10 @@ public class TimeLineManager : MonoBehaviour
     [SerializeField] private List<TimeLineNote> selectedNoteList = new List<TimeLineNote>();
     [SerializeField] private TimeLineNote standardNote = null;
 
+    //노트 정보 수정에 관련된 변수
+    [SerializeField] private GameObject infoDropdownPref;
+    [SerializeField] private GameObject infoInputFieldPref;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,14 +73,21 @@ public class TimeLineManager : MonoBehaviour
             SetBeat();
         }
     }
+    
+    public void Init()
+    {
+        DrawGrid();
+        ShowGrid(4);
+
+        TLNoteGeneration();
+    }
 
     //그리드 생성 관련 함수
     #region
-    public void DrawGrid()
+    private void DrawGrid()
     {
         GridGeneration();
         SetGridPosition();
-        ShowGrid(4);
     }
 
     //그리드 생성
@@ -150,7 +161,7 @@ public class TimeLineManager : MonoBehaviour
 
     //노트 생성 관련 함수
     #region
-    public void TLNoteGeneration()
+    private void TLNoteGeneration()
     {
         NoteGeneration();
         SetNotePosition();
@@ -213,7 +224,7 @@ public class TimeLineManager : MonoBehaviour
     }
     #endregion
 
-    //유저 입력 관련 함수들
+    //유저 입력, 에디터 환경 변경 관련 함수들
     #region
     //OnValueChanged에 들어갈 이벤트
     public void EditingToggle()
@@ -442,4 +453,14 @@ public class TimeLineManager : MonoBehaviour
         }
     }
     #endregion 노트 선택 관련 함수들
+
+    //노트 정보 수정 관련 함수들
+    #region
+    private void InfoGeneration()
+    {
+
+    }
+
+
+    #endregion
 }
