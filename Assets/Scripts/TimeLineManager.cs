@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Text.RegularExpressions;
 
 public class TimeLineManager : MonoBehaviour
 {
@@ -45,21 +46,18 @@ public class TimeLineManager : MonoBehaviour
     [SerializeField] private TimeLineNote standardNote = null;
 
     //노트 정보 수정에 관련된 변수
+    [SerializeField] private GameObject infoPanel;
+
     [SerializeField] private GameObject infoDropdownPref;
     [SerializeField] private GameObject infoInputFieldPref;
+    private Dropdown[] infoArrDropdown = new Dropdown[11];
+    private InputField[] infoArrInputField = new InputField[11];
 
-    // Start is called before the first frame update
     void Start()
     {
-        tlPos = timeLine.transform.position;
-
-        editingToggle.isOn = editingMode;
-
-        beatSlider.minValue = 0;
-        beatSlider.maxValue = beat.Length - 1;
+        InitVariable();
     }
 
-    // Update is called once per frame
     void Update()
     {
         SwitchEditingMode();
@@ -73,14 +71,35 @@ public class TimeLineManager : MonoBehaviour
             SetBeat();
         }
     }
-    
+
+    //초기화 관련 함수
+    #region
+    private void InitVariable()
+    {
+        tlPos = timeLine.transform.position;
+
+        editingToggle.isOn = editingMode;
+
+        beatSlider.minValue = 0;
+        beatSlider.maxValue = beat.Length - 1;
+
+        for(int i = 0; i < KEY.COUNT; ++i)
+        {
+            infoArrDropdown[i] = null;
+            infoArrInputField[i] = null;
+        }
+    }
+
     public void Init()
     {
         DrawGrid();
         ShowGrid(4);
 
         TLNoteGeneration();
+
+        InfoInit();
     }
+    #endregion
 
     //그리드 생성 관련 함수
     #region
@@ -456,11 +475,57 @@ public class TimeLineManager : MonoBehaviour
 
     //노트 정보 수정 관련 함수들
     #region
-    private void InfoGeneration()
+    private void InfoInit()
     {
+        for(int i = 1; i < KEY.COUNT; ++i)
+        {
+            InfoGeneration(i, KEY.KEY_TYPE[i]);
+        }
 
+        SetInfoOptions(KEY.TYPE, TYPE.COUNT, TYPE.FindName);
+        SetInfoOptions(KEY.NOTE_TYPE, NOTE_TYPE.COUNT, NOTE_TYPE.FindName);
+        SetInfoOptions(KEY.EVENT_TYPE, EVENT_TYPE.COUNT, EVENT_TYPE.FindName);
     }
 
+    //정보 UI 생성
+    private void InfoGeneration(int num, int type)
+    {
+        if(type == 0)
+        {
+            GameObject info = Instantiate(infoInputFieldPref);
+            info.transform.GetChild(0).GetComponent<Text>().text = Regex.Replace(KEY.FindName(num), "_", " ");
+            infoArrInputField[num] = info.transform.GetChild(1).GetComponent<InputField>();
+
+            SetInfoPosition(info.transform, num);
+        }
+        else if(type == 1)
+        {
+            GameObject info = Instantiate(infoDropdownPref);
+            info.transform.GetChild(0).GetComponent<Text>().text = Regex.Replace(KEY.FindName(num), "_", " ");
+            infoArrDropdown[num] = info.transform.GetChild(1).GetComponent<Dropdown>();
+
+            SetInfoPosition(info.transform, num);
+        }
+    }
+
+    private void SetInfoPosition(Transform trans, int num)
+    {
+        trans.transform.SetParent(infoPanel.transform);
+        trans.localPosition = new Vector2(0, 170 - ((num - 1) * 37.5f));
+        trans.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+    }
+
+    delegate string FindName(int value);
+    private void SetInfoOptions(int index, int count, FindName findName)
+    {
+        infoArrDropdown[index].ClearOptions();
+        for (int i = 0; i < count; ++i)
+        {
+            Dropdown.OptionData option = new Dropdown.OptionData();
+            option.text = findName(i);
+            infoArrDropdown[index].options.Add(option);
+        }
+    }
 
     #endregion
 }

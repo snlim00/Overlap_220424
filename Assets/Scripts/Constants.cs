@@ -83,7 +83,9 @@ public static class KEY
     public const int DURATION = 5;
     public static readonly int[] VALUE = { 6, 7, 8, 9, 10 };
 
-    public const int LAST_NUM = 11;
+    public const int COUNT = 11;
+
+    public static readonly int[] KEY_TYPE = { 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0 };
 
     public static string FindName(int value)
     {
@@ -120,13 +122,14 @@ public static class KEY
                 return "";
         }
     }
-
 }
 
 public static class TYPE
 {
     public const int NOTE = 0;
     public const int EVENT = 1;
+
+    public const int COUNT = 2;
 
     public static string FindName(int value)
     {
@@ -152,6 +155,8 @@ public static class NOTE_TYPE
     public const int DOUBLE = 1;
     public const int SLIDE = 2;
 
+    public const int COUNT = 3;
+
     public static string FindName(int value)
     {
         switch (value)
@@ -176,6 +181,8 @@ public static class NOTE_TYPE
 public static class EVENT_TYPE
 {
     public const int SET_SPEED = 0;
+
+    public const int COUNT = 1;
 
     public static string FindName(int value)
     {
