@@ -6,11 +6,13 @@ public class LevelPlayer : MonoBehaviour
 {
     [SerializeField] private GameObject[] notePref;
 
-    private EditorManager tlManager;
+    private EditorManager editorMgr;
 
     public double t;
 
     private AudioSource audioSource;
+
+    private bool didEditorMgrInit = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -22,19 +24,16 @@ public class LevelPlayer : MonoBehaviour
 
         Level.S.songLength = audioSource.clip.length;
 
-        tlManager = FindObjectOfType<EditorManager>();
-        if (PlayerSetting.S.editerMode == true)
-        {
-            tlManager.Init();
-        }
-        else
-        {
-            tlManager.gameObject.SetActive(false);
-        }
+        editorMgr = EditorManager.S;
 
         NoteGeneration();
 
         GameStart();
+    }
+
+    void Start()
+    {
+        
     }
 
     private void GameStart()
@@ -47,7 +46,20 @@ public class LevelPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //반드시 수정할 것 (EditorManager의 Init과 GridManger, TLNoteMnager등의 Init이 Start에 있는 문제)
+        if(didEditorMgrInit == false)
+        {
+            didEditorMgrInit = true;
+
+            if (PlayerSetting.S.editerMode == true)
+            {
+                editorMgr.Init();
+            }
+            else
+            {
+                editorMgr.gameObject.SetActive(false);
+            }
+        }
     }
 
     IEnumerator NoteTimer()

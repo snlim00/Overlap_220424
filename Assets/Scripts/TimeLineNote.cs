@@ -15,6 +15,7 @@ public class TimeLineNote : MonoBehaviour
 
     public static Color32 subSelectColor = new Color32(255, 83, 83, 180);
     public static Color32 stdSelectColor = Color.red;
+    public static Color32 defaultColor = Color.white;
 
     void Awake()
     {
@@ -28,6 +29,7 @@ public class TimeLineNote : MonoBehaviour
 
     public void Select()
     {
+        //Debug.Log("Select");
         isSelected = true;
 
         image.color = subSelectColor;
@@ -35,8 +37,21 @@ public class TimeLineNote : MonoBehaviour
 
     public void Deselect()
     {
+       // Debug.Log("Deselect");
         isSelected = false;
 
-        image.color = Color.white;
+        image.color = defaultColor;
+    }
+
+    public void SetStandardNote()
+    {
+        image.color = stdSelectColor;
+    }
+
+    public void UnsetStandardNote()
+    {
+        image.color = defaultColor;
+
+        Select();
     }
 }

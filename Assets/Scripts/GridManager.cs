@@ -7,8 +7,17 @@ using System.Text.RegularExpressions;
 
 public class GridManager : MonoBehaviour
 {
+    private EditorManager editorMgr;
+
     //생성할 그리드 프리팹
     [SerializeField] private GameObject gridPrefab;
+
+    //그리드의 부모 오브젝트
+    private Transform gridParents;
+
+    //현재 설정된 비트 나눗수를 표시하는 UI
+    [SerializeField] private Slider beatSlider;
+    [SerializeField] private Text beatText;
 
     //비트 나눗수 관련 변수
     public int selectedBeat = 2;
@@ -18,8 +27,28 @@ public class GridManager : MonoBehaviour
     public const float defaultBeat = 4f;
 
     void Start()
+    {        
+        editorMgr = EditorManager.S;
+
+        editorMgr.InitEvent.AddListener(Init);
+    }
+
+    void Init()
     {
+        gridParents = editorMgr.timeLine.transform.FindChild("Grids");
+
+        beatSlider.minValue = 0;
+        beatSlider.maxValue = beat.Length - 1;
+
         GridInit();
+    }
+
+    void Update()
+    {
+        if(editorMgr.editingMode == true)
+        {
+            SetBeat();
+        }
     }
 
     public void GridInit()
@@ -30,6 +59,7 @@ public class GridManager : MonoBehaviour
         ShowGrid(defaultBeat);
     }
 
+    #region 그리드 생성 관련 함수
     private void AllGridGeneration()
     {
         //가장 작은 비트의 음악에서의 길이를 측정하고, 해당 길이를 통해 생성할 그리드 수 결정
@@ -38,7 +68,7 @@ public class GridManager : MonoBehaviour
 
         for(int i = 0; i < gridCount; ++i)
         {
-            EditorManager.S.gridList.Add(InstantiateGrid(i));
+            editorMgr.gridList.Add(InstantiateGrid(i));
         }
     }
 
@@ -46,7 +76,7 @@ public class GridManager : MonoBehaviour
     {
         GameObject grid = Instantiate(gridPrefab) as GameObject;
 
-        grid.transform.SetParent(EditorManager.S.timeLine.transform);
+        grid.transform.SetParent(gridParents);
         grid.transform.localScale = Vector3.one;
 
         return grid;
@@ -54,25 +84,27 @@ public class GridManager : MonoBehaviour
 
     public void SetAllGridPosition()
     {
-        for(int i = 0; i < EditorManager.S.gridList.Count; ++i)
+        for(int i = 0; i < editorMgr.gridList.Count; ++i)
         {
-            SetGridPosition(EditorManager.S.gridList[i], i);
+            SetGridPosition(editorMgr.gridList[i], i);
         }
     }
+    #endregion
+
+
 
     private void SetGridPosition(GameObject grid, int num)
     {
-        float gridPosition = ((60f / Level.S.bpm) * (1 / maxBeat) * EditorManager.S.interval) * num;
+        float gridPosition = ((60f / Level.S.bpm) * (1 / maxBeat) * editorMgr.interval) * num;
 
         grid.transform.localPosition = new Vector2(gridPosition, 0);
     }
 
-    public void ShowGrid(float beat)
+    private void ShowGrid(float beat)
     {
-            Debug.Log(32 / beat);
-        for(int i = 0; i < EditorManager.S.gridList.Count; ++i)
+        for(int i = 0; i < editorMgr.gridList.Count; ++i)
         {
-            GameObject grid = EditorManager.S.gridList[i];
+            GameObject grid = editorMgr.gridList[i];
 
             //해당 노트가 비트에 해당하지 않는다면 비활성화, 해당한다면 활성화
             if(i % (32 / beat) != 0)
@@ -86,6 +118,56 @@ public class GridManager : MonoBehaviour
         }
 
         //첫번째 그리드는 항상 활성화
-        EditorManager.S.gridList[0].SetActive(true);
+        editorMgr.gridList[0].SetActive(true);
     }
+
+
+
+    #region 비트 나눗수 설정 관련 함수
+    private void SetBeat()
+    {
+        if (_SetBeat() == false)
+            return;
+
+        ShowGrid(beat[selectedBeat]);
+        RenewalBeatUI();
+    }
+
+    private bool _SetBeat()
+    {
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            selectedBeat = SetBeatIndex(selectedBeat + 1);
+
+            return true;
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            selectedBeat = SetBeatIndex(selectedBeat - 1);
+
+            return true;
+        }
+        else return false;
+    }
+
+    private int SetBeatIndex(int index)
+    {
+        if (index >= beat.Length)
+        {
+            index = beat.Length - 1;
+        }
+        else if (index < 0)
+        {
+            index = 0;
+        }
+
+        return index;
+    }
+
+    private void RenewalBeatUI()
+    {
+        beatSlider.value = selectedBeat;
+        beatText.text = "1 / " + beat[selectedBeat];
+    }
+    #endregion
 }
