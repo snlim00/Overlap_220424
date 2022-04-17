@@ -163,6 +163,15 @@ public class TLNoteManager : MonoBehaviour
         }
     }
 
+    //기준 노트 변경
+    private void ChangeStandardNote()
+    {
+        TimeLineNote tlNote = GetCurrentSelectedNote();
+
+        AddSelectedNote(tlNote);
+        SetStandardNote(tlNote);
+    }
+
     //노트 토글
     private void NoteToggle(TimeLineNote tlNote)
     {
@@ -179,25 +188,20 @@ public class TLNoteManager : MonoBehaviour
     //모든 노트 선택 해제 (단일 노트 선택 시에만 사용, 그 외에 사용 시 기준 노트가 사라지는 불상사 발생)
     private void DeselectAll()
     {
-        int selectedNoteCount = editorMgr.selectedNoteList.Count;
-        //for (int i = 0; i < selectedNoteCount; ++i)
-        for (int i = 0; i < editorMgr.selectedNoteList.Count; ++i)
+        //첫번째 배열이 사라지며 다음 요소가 첫번째 배열로 이동하므로 항상 첫번째 배열만 삭제하면 됨.
+        int count = editorMgr.selectedNoteList.Count;
+        for (int i = 0; i < count; ++i)
         {
-            //Debug.Log("i: " + i);
-            //Debug.LogWarning("name: " + editorMgr.selectedNoteList[i].gameObject.name);
-            //Debug.LogError("count: " + editorMgr.selectedNoteList.Count);
-
-            //editorMgr.selectedNoteList[i].Deselect();
-            Deselect(editorMgr.selectedNoteList[i], true);
+            Deselect(editorMgr.selectedNoteList[0], true);
         }
 
-        //editorMgr.selectedNoteList.Clear();
+        editorMgr.selectedNoteList.Clear();
     }
 
     //노트 선택 해제
     private void Deselect(TimeLineNote tlNote, bool calledByDeselectAll = false)
     {
-        //if(calledByDeselectAll == true && tlNote == editorMgr.standardNote)
+        //if (calledByDeselectAll == true && tlNote == editorMgr.standardNote)
         //{
         //    return;
         //}
@@ -220,7 +224,7 @@ public class TLNoteManager : MonoBehaviour
     //기준 노트 설정
     private void SetStandardNote(TimeLineNote tlNote)
     {
-        //기존 기준 노트 기준 해제
+        //기존 기준 노트를 기준 해제
         if(editorMgr.standardNote != null)
         {
             editorMgr.standardNote.UnsetStandardNote();
@@ -236,14 +240,6 @@ public class TLNoteManager : MonoBehaviour
         editorMgr.standardNote.SetStandardNote();
     }
 
-    //기준 노트 변경
-    private void ChangeStandardNote()
-    {
-        TimeLineNote tlNote = GetCurrentSelectedNote();
-
-        AddSelectedNote(tlNote);
-        SetStandardNote(tlNote);
-    }
 
     //Event.current.currentSelectedGameObject을 가져오는 함수 (쉬운 추적을 위해 해당 함수를 사용할 것)
     private TimeLineNote GetCurrentSelectedNote()
