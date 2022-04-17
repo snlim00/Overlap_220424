@@ -145,4 +145,34 @@ public class Level : MonoBehaviour
             this.levelInfo.Add(temp);
         }
     }
+
+    public void WriteLevel()
+    {
+        Debug.Log("Write");
+        using(var writer = new CsvFileWriter("Assets/Levels/" + levelName + "/Resources/" + levelName + "_" + DIF.FindName(levelDifficulty)))
+        {
+            List<string> colums = new List<string>();
+            string[] keyList = new string[KEY.COUNT];
+            for(int i = 0; i < KEY.COUNT; ++i)
+            {
+                keyList[i] = i.ToString();
+            }
+
+            colums.AddRange(keyList);
+
+            writer.WriteRow(colums);
+            colums.Clear();
+
+            for (int i = 0; i < level.Count; ++i)
+            {
+                for(int j = 0; j < KEY.COUNT; ++j)
+                {
+                    colums.Add(level[i][j].ToString());
+                }
+
+                writer.WriteRow(colums);
+                colums.Clear();
+            }
+        }
+    }
 }

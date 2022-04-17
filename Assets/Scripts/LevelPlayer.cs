@@ -6,14 +6,14 @@ public class LevelPlayer : MonoBehaviour
 {
     [SerializeField] private GameObject[] notePref;
 
-    private TimeLineManager tlManager;
+    private EditorManager tlManager;
 
     public double t;
 
     private AudioSource audioSource;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         audioSource = GetComponent<AudioSource>();
 
@@ -22,7 +22,7 @@ public class LevelPlayer : MonoBehaviour
 
         Level.S.songLength = audioSource.clip.length;
 
-        tlManager = FindObjectOfType<TimeLineManager>();
+        tlManager = FindObjectOfType<EditorManager>();
         if (PlayerSetting.S.editerMode == true)
         {
             tlManager.Init();

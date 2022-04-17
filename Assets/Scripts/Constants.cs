@@ -73,6 +73,11 @@ public static class DIF
     }
 }
 
+public interface A
+{
+
+}
+
 public static class KEY
 {
     public const int TIMING = 0;
@@ -147,6 +152,22 @@ public static class TYPE
         }
 
     }
+
+    public static int FindValue(string name)
+    {
+        switch (name)
+        {
+            case nameof(NOTE):
+                return NOTE;
+
+            case nameof(EVENT):
+                return EVENT;
+
+            default:
+                Debug.LogError("FindValue: 해당 이름을 가진 변수를 찾을 수 없습니다.");
+                return -1;
+        }
+    }
 }
 
 public static class NOTE_TYPE
@@ -176,6 +197,25 @@ public static class NOTE_TYPE
         }
 
     }
+
+    public static int FindValue(string name)
+    {
+        switch (name)
+        {
+            case nameof(TAP):
+                return TAP;
+
+            case nameof(DOUBLE):
+                return DOUBLE;
+
+            case nameof(SLIDE):
+                return SLIDE;
+
+            default:
+                Debug.LogError("FindValue: 해당 이름을 가진 변수를 찾을 수 없습니다.");
+                return -1;
+        }
+    }
 }
 
 public static class EVENT_TYPE
@@ -194,6 +234,19 @@ public static class EVENT_TYPE
             default:
                 Debug.LogError("FindName: 해당 값을 가진 변수를 찾을 수 없습니다.");
                 return "";
+        }
+    }
+
+    public static int FindValue(string name)
+    {
+        switch (name)
+        {
+            case nameof(SET_SPEED):
+                return SET_SPEED;
+
+            default:
+                Debug.LogError("FindValue: 해당 이름을 가진 변수를 찾을 수 없습니다.");
+                return -1;
         }
     }
 }
