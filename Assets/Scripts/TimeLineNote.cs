@@ -29,7 +29,7 @@ public class TimeLineNote : MonoBehaviour
 
     public void Select()
     {
-        Debug.Log(name + " Select");
+        //Debug.Log(name + " Select");
         isSelected = true;
 
         image.color = subSelectColor;
@@ -37,7 +37,7 @@ public class TimeLineNote : MonoBehaviour
 
     public void Deselect()
     {
-        Debug.Log(name + " Deselect");
+        //Debug.Log(name + " Deselect");
         isSelected = false;
 
         image.color = defaultColor;

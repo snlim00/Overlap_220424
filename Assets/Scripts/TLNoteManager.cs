@@ -169,7 +169,7 @@ public class TLNoteManager : MonoBehaviour
         TimeLineNote tlNote = GetCurrentSelectedNote();
 
         AddSelectedNote(tlNote);
-        SetStandardNote(tlNote);
+        SetStandardNote(tlNote, true);
     }
 
     //노트 토글
@@ -192,20 +192,15 @@ public class TLNoteManager : MonoBehaviour
         int count = editorMgr.selectedNoteList.Count;
         for (int i = 0; i < count; ++i)
         {
-            Deselect(editorMgr.selectedNoteList[0], true);
+            Deselect(editorMgr.selectedNoteList[0]);
         }
 
         editorMgr.selectedNoteList.Clear();
     }
 
     //노트 선택 해제
-    private void Deselect(TimeLineNote tlNote, bool calledByDeselectAll = false)
+    private void Deselect(TimeLineNote tlNote)
     {
-        //if (calledByDeselectAll == true && tlNote == editorMgr.standardNote)
-        //{
-        //    return;
-        //}
-
         editorMgr.selectedNoteList.Remove(tlNote);
 
         tlNote.Deselect();
@@ -222,19 +217,20 @@ public class TLNoteManager : MonoBehaviour
     }
 
     //기준 노트 설정
-    private void SetStandardNote(TimeLineNote tlNote)
+    private void SetStandardNote(TimeLineNote tlNote, bool doRelease = false)
     {
         //기존 기준 노트를 기준 해제
         if(editorMgr.standardNote != null)
         {
-            editorMgr.standardNote.UnsetStandardNote();
+            if(doRelease == false)
+            {
+                editorMgr.standardNote.UnsetStandardNote();
+            }
+            else
+            {
+                editorMgr.standardNote.ReleaseStandardNote();
+            }
         }
-
-        //이 코드는 왜 적었었는 지 모르겠음.
-        //int index = editorMgr.tlNoteList.IndexOf(tlNote);
-
-        //if (index == -1)
-        //    return;
 
         editorMgr.standardNote = tlNote;
         editorMgr.standardNote.SetStandardNote();
