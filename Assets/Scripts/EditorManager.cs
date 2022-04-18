@@ -6,8 +6,6 @@ using UnityEngine.Events;
 
 public class EditorManager : MonoBehaviour
 {
-    public static EditorManager S;
-
     public UnityEvent InitEvent; //EditorManager의 자식들의 Init이 여기 담김
 
     //에디팅 모드 활성화 관련 변수
@@ -24,23 +22,13 @@ public class EditorManager : MonoBehaviour
     public float interval;
     public float intervalSensivisity = 100;
 
-    //노트 선택, 배치, 삭제 등에 관련된 변수
+    //선택된 노트를 저장하는 변수
     public List<TimeLineNote> selectedNoteList = new List<TimeLineNote>();
     public TimeLineNote standardNote = null;
 
-    void Awake()
-    {
-        S = this;
-    }
-
     void Start()
     {
-        
-    }
-
-    void Update()
-    {
-
+        Init();
     }
 
     public void Init()

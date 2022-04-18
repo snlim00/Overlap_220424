@@ -9,33 +9,33 @@ public class GridManager : MonoBehaviour
 {
     private EditorManager editorMgr;
 
-    //»ı¼ºÇÒ ±×¸®µå ÇÁ¸®ÆÕ
+    //ìƒì„±í•  ê·¸ë¦¬ë“œ í”„ë¦¬íŒ¹
     [SerializeField] private GameObject gridPrefab;
 
-    //±×¸®µåÀÇ ºÎ¸ğ ¿ÀºêÁ§Æ®
+    //ê·¸ë¦¬ë“œì˜ ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸
     private Transform gridParents;
 
-    //ÇöÀç ¼³Á¤µÈ ºñÆ® ³ª´°¼ö¸¦ Ç¥½ÃÇÏ´Â UI
+    //í˜„ì¬ ì„¤ì •ëœ ë¹„íŠ¸ ë‚˜ëˆ—ìˆ˜ë¥¼ í‘œì‹œí•˜ëŠ” UI
     [SerializeField] private Slider beatSlider;
     [SerializeField] private Text beatText;
 
-    //ºñÆ® ³ª´°¼ö °ü·Ã º¯¼ö
+    //ë¹„íŠ¸ ë‚˜ëˆ—ìˆ˜ ê´€ë ¨ ë³€ìˆ˜
     public int selectedBeat = 2;
     public float[] beat = { 1, 2, 4, 8, 16, 32 };
     public const float minBeat = 1f;
     public const float maxBeat = 32f;
     public const float defaultBeat = 4f;
 
-    void Start()
-    {        
-        editorMgr = EditorManager.S;
+    void Awake()
+    {
+        editorMgr = FindObjectOfType<EditorManager>();
 
         editorMgr.InitEvent.AddListener(Init);
     }
 
     void Init()
     {
-        gridParents = editorMgr.timeLine.transform.FindChild("Grids");
+        gridParents = editorMgr.timeLine.transform.Find("Grids");
 
         beatSlider.minValue = 0;
         beatSlider.maxValue = beat.Length - 1;
@@ -45,7 +45,7 @@ public class GridManager : MonoBehaviour
 
     void Update()
     {
-        if(editorMgr.editingMode == true)
+        if (editorMgr.editingMode == true)
         {
             SetBeat();
         }
@@ -57,16 +57,18 @@ public class GridManager : MonoBehaviour
         SetAllGridPosition();
 
         ShowGrid(defaultBeat);
+
+        SetAllGridColor();
     }
 
-    #region ±×¸®µå »ı¼º °ü·Ã ÇÔ¼ö
+    #region ê·¸ë¦¬ë“œ ìƒì„± ê´€ë ¨ í•¨ìˆ˜
     private void AllGridGeneration()
     {
-        //°¡Àå ÀÛÀº ºñÆ®ÀÇ À½¾Ç¿¡¼­ÀÇ ±æÀÌ¸¦ ÃøÁ¤ÇÏ°í, ÇØ´ç ±æÀÌ¸¦ ÅëÇØ »ı¼ºÇÒ ±×¸®µå ¼ö °áÁ¤
+        //ê°€ì¥ ì‘ì€ ë¹„íŠ¸ì˜ ìŒì•…ì—ì„œì˜ ê¸¸ì´ë¥¼ ì¸¡ì •í•˜ê³ , í•´ë‹¹ ê¸¸ì´ë¥¼ í†µí•´ ìƒì„±í•  ê·¸ë¦¬ë“œ ìˆ˜ ê²°ì •
         float minBeatLength = (60 / Level.S.bpm) * (1 / maxBeat);
         int gridCount = (int)(Level.S.songLength / minBeatLength) + 1;
 
-        for(int i = 0; i < gridCount; ++i)
+        for (int i = 0; i < gridCount; ++i)
         {
             editorMgr.gridList.Add(InstantiateGrid(i));
         }
@@ -84,9 +86,37 @@ public class GridManager : MonoBehaviour
 
     public void SetAllGridPosition()
     {
-        for(int i = 0; i < editorMgr.gridList.Count; ++i)
+        for (int i = 0; i < editorMgr.gridList.Count; ++i)
         {
             SetGridPosition(editorMgr.gridList[i], i);
+        }
+    }
+
+    private void SetAllGridColor()
+    {
+        for(int i = 0; i < editorMgr.gridList.Count; ++i)
+        {
+            if(i % 32 == 0)
+            {
+                editorMgr.gridList[i].GetComponent<Image>().color = Color.white;
+            }
+            else if (i % 16 == 0)
+            {
+                editorMgr.gridList[i].GetComponent<Image>().color = Color.red;
+            }
+            else if (i % 8 == 0)
+            {
+                editorMgr.gridList[i].GetComponent<Image>().color = Color.blue;
+            }
+            else if (i % 4 == 0)
+            {
+                editorMgr.gridList[i].GetComponent<Image>().color = Color.yellow;
+            }
+            else if (i % 2 == 0)
+            {
+                editorMgr.gridList[i].GetComponent<Image>().color = Color.cyan;
+            }
+            else editorMgr.gridList[i].GetComponent<Image>().color = Color.gray;
         }
     }
     #endregion
@@ -102,12 +132,12 @@ public class GridManager : MonoBehaviour
 
     private void ShowGrid(float beat)
     {
-        for(int i = 0; i < editorMgr.gridList.Count; ++i)
+        for (int i = 0; i < editorMgr.gridList.Count; ++i)
         {
             GameObject grid = editorMgr.gridList[i];
 
-            //ÇØ´ç ³ëÆ®°¡ ºñÆ®¿¡ ÇØ´çÇÏÁö ¾Ê´Â´Ù¸é ºñÈ°¼ºÈ­, ÇØ´çÇÑ´Ù¸é È°¼ºÈ­
-            if(i % (32 / beat) != 0)
+            //í•´ë‹¹ ë…¸íŠ¸ê°€ ë¹„íŠ¸ì— í•´ë‹¹í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ ë¹„í™œì„±í™”, í•´ë‹¹í•œë‹¤ë©´ í™œì„±í™”
+            if (i % (32 / beat) != 0)
             {
                 grid.SetActive(false);
             }
@@ -117,13 +147,13 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        //Ã¹¹øÂ° ±×¸®µå´Â Ç×»ó È°¼ºÈ­
+        //ì²«ë²ˆì§¸ ê·¸ë¦¬ë“œëŠ” í•­ìƒ í™œì„±í™”
         editorMgr.gridList[0].SetActive(true);
     }
 
 
 
-    #region ºñÆ® ³ª´°¼ö ¼³Á¤ °ü·Ã ÇÔ¼ö
+    #region ë¹„íŠ¸ ë‚˜ëˆ—ìˆ˜ ì„¤ì • ê´€ë ¨ í•¨ìˆ˜
     private void SetBeat()
     {
         if (_SetBeat() == false)

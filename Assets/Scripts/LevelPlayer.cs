@@ -17,6 +17,8 @@ public class LevelPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        editorMgr = FindObjectOfType<EditorManager>();
+
         audioSource = GetComponent<AudioSource>();
 
         //ReadLevel이 곡의 이름에서 공백을 제거하여 string으로 반환, 이후 해당 문자열로 곡 파일 탐색
@@ -24,7 +26,6 @@ public class LevelPlayer : MonoBehaviour
 
         Level.S.songLength = audioSource.clip.length;
 
-        editorMgr = EditorManager.S;
 
         NoteGeneration();
 
@@ -46,20 +47,7 @@ public class LevelPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //반드시 수정할 것 (EditorManager의 Init과 GridManger, TLNoteMnager등의 Init이 Start에 있는 문제)
-        if(didEditorMgrInit == false)
-        {
-            didEditorMgrInit = true;
 
-            if (PlayerSetting.S.editerMode == true)
-            {
-                editorMgr.Init();
-            }
-            else
-            {
-                editorMgr.gameObject.SetActive(false);
-            }
-        }
     }
 
     IEnumerator NoteTimer()

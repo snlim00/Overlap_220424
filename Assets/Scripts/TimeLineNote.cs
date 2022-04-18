@@ -48,11 +48,13 @@ public class TimeLineNote : MonoBehaviour
         image.color = stdSelectColor;
     }
 
+    //StandardNote및 선택 상태 해제
     public void UnsetStandardNote()
     {
-        image.color = defaultColor;
+        Deselect();
     }
 
+    //StandardNote만 해제, 선택 상태는 유지
     public void ReleaseStandardNote()
     {
         Select();

@@ -10,19 +10,18 @@ public class TLNoteManager : MonoBehaviour
 
     [SerializeField] private GameObject tlNotePrefab;
 
-    //³ëÆ®ÀÇ ºÎ¸ğ ¿ÀºêÁ§Æ®
+    //ë…¸íŠ¸ì˜ ë¶€ëª¨ ì˜¤ë¸Œì íŠ¸
     private Transform noteParents;
 
-    void Start()
+    private void Awake()
     {
-        editorMgr = EditorManager.S;
+        editorMgr = FindObjectOfType<EditorManager>();
 
         editorMgr.InitEvent.AddListener(Init);
     }
-
     private void Init()
     {
-        noteParents = editorMgr.timeLine.transform.FindChild("Notes");
+        noteParents = editorMgr.timeLine.transform.Find("Notes");
 
         TLNoteInit();
     }
@@ -34,10 +33,10 @@ public class TLNoteManager : MonoBehaviour
         SortNoteNum();
     }
 
-    #region ³ëÆ® »ı¼º °ü·Ã ÇÔ¼ö
+    #region ë…¸íŠ¸ ìƒì„± ê´€ë ¨ í•¨ìˆ˜
     private void AllTLNoteGeneration()
     {
-        for(int row = 0; row < Level.S.level.Count; ++row)
+        for (int row = 0; row < Level.S.level.Count; ++row)
         {
             editorMgr.tlNoteList.Add(TLNoteGeneration(row));
         }
@@ -67,9 +66,9 @@ public class TLNoteManager : MonoBehaviour
         return tlNote;
     }
 
-    private void SetAllTLNotePosition()
+    public void SetAllTLNotePosition()
     {
-        for(int row = 0; row < editorMgr.tlNoteList.Count; ++row)
+        for (int row = 0; row < editorMgr.tlNoteList.Count; ++row)
         {
             TimeLineNote tlNote = editorMgr.tlNoteList[row];
 
@@ -84,7 +83,7 @@ public class TLNoteManager : MonoBehaviour
 
     private void SortNoteNum()
     {
-        //³ëÆ®ÀÇ ÀÎµ¦½º¿Í numÀ» xÃàÀ» ±âÁØÀ¸·Î ÇÏ¿© ¿À¸§Â÷¼ø Á¤·Ä
+        //ë…¸íŠ¸ì˜ ì¸ë±ìŠ¤ì™€ numì„ xì¶•ì„ ê¸°ì¤€ìœ¼ë¡œ í•˜ì—¬ ì˜¤ë¦„ì°¨ìˆœ ì •ë ¬
         editorMgr.tlNoteList.Sort((A, B) => A.transform.position.x.CompareTo(B.transform.position.x));
 
         for (int i = 0; i < editorMgr.tlNoteList.Count; ++i)
@@ -97,19 +96,19 @@ public class TLNoteManager : MonoBehaviour
 
 
 
-    #region ³ëÆ® ¼±ÅÃ °ü·Ã ÇÔ¼ö
-    //³ëÆ®ÀÇ OnClick¿¡ ÇÒ´çµÇ´Â ÀÌº¥Æ®
+    #region ë…¸íŠ¸ ì„ íƒ ê´€ë ¨ í•¨ìˆ˜
+    //ë…¸íŠ¸ì˜ OnClickì— í• ë‹¹ë˜ëŠ” ì´ë²¤íŠ¸
     private void NoteSelect()
     {
-        if(Input.GetKey(KeyCode.LeftControl) == true)
+        if (Input.GetKey(KeyCode.LeftControl) == true)
         {
             SingleNoteToggle();
         }
-        else if(Input.GetKey(KeyCode.LeftAlt) == true)
+        else if (Input.GetKey(KeyCode.LeftAlt) == true)
         {
             ChangeStandardNote();
         }
-        else if(Input.GetKey(KeyCode.LeftShift) == true)
+        else if (Input.GetKey(KeyCode.LeftShift) == true)
         {
             MultiNoteSelect();
         }
@@ -119,7 +118,7 @@ public class TLNoteManager : MonoBehaviour
         }
     }
 
-    //´ÜÀÏ ³ëÆ® ¼±ÅÃ
+    //ë‹¨ì¼ ë…¸íŠ¸ ì„ íƒ
     private void SingleNoteSelect()
     {
         DeselectAll();
@@ -129,10 +128,10 @@ public class TLNoteManager : MonoBehaviour
 
         AddSelectedNote(tlNote);
 
-        SetStandardNote(tlNote); //³ëÆ® µÎ°³½Ä ¼±ÅÃµÇ´Â°Å ¿©±â°¡ ¹®Á¦ÀÓ. ¿øÀÎÀº ¸ğ¸§.
+        SetStandardNote(tlNote); //ë…¸íŠ¸ ë‘ê°œì‹ ì„ íƒë˜ëŠ”ê±° ì—¬ê¸°ê°€ ë¬¸ì œì„. ì›ì¸ì€ ëª¨ë¦„.
     }
 
-    //´ÜÀÏ ³ëÆ® Åä±Û
+    //ë‹¨ì¼ ë…¸íŠ¸ í† ê¸€
     private void SingleNoteToggle()
     {
         TimeLineNote tlNote = GetCurrentSelectedNote();
@@ -140,7 +139,7 @@ public class TLNoteManager : MonoBehaviour
         NoteToggle(tlNote);
     }
 
-    //´ÙÁß ³ëÆ® ¼±ÅÃ
+    //ë‹¤ì¤‘ ë…¸íŠ¸ ì„ íƒ
     private void MultiNoteSelect()
     {
         TimeLineNote tlNote = GetCurrentSelectedNote();
@@ -149,7 +148,7 @@ public class TLNoteManager : MonoBehaviour
 
         if (tlNote.num > stdNoteNum)
         {
-            for(int i = stdNoteNum; i <= tlNote.num; ++i)
+            for (int i = stdNoteNum; i <= tlNote.num; ++i)
             {
                 AddSelectedNote(editorMgr.tlNoteList[i]);
             }
@@ -163,7 +162,7 @@ public class TLNoteManager : MonoBehaviour
         }
     }
 
-    //±âÁØ ³ëÆ® º¯°æ
+    //ê¸°ì¤€ ë…¸íŠ¸ ë³€ê²½
     private void ChangeStandardNote()
     {
         TimeLineNote tlNote = GetCurrentSelectedNote();
@@ -172,10 +171,10 @@ public class TLNoteManager : MonoBehaviour
         SetStandardNote(tlNote, true);
     }
 
-    //³ëÆ® Åä±Û
+    //ë…¸íŠ¸ í† ê¸€
     private void NoteToggle(TimeLineNote tlNote)
     {
-        //standardNote´Â ¼±ÅÃ ÇØÁ¦ÇÒ ¼ö ¾øÀ¸¹Ç·Î ÇÔ¼ö Á¾·á.
+        //standardNoteëŠ” ì„ íƒ í•´ì œí•  ìˆ˜ ì—†ìœ¼ë¯€ë¡œ í•¨ìˆ˜ ì¢…ë£Œ.
         if (tlNote == editorMgr.standardNote)
             return;
 
@@ -185,10 +184,10 @@ public class TLNoteManager : MonoBehaviour
             AddSelectedNote(tlNote);
     }
 
-    //¸ğµç ³ëÆ® ¼±ÅÃ ÇØÁ¦ (´ÜÀÏ ³ëÆ® ¼±ÅÃ ½Ã¿¡¸¸ »ç¿ë, ±× ¿Ü¿¡ »ç¿ë ½Ã ±âÁØ ³ëÆ®°¡ »ç¶óÁö´Â ºÒ»ó»ç ¹ß»ı)
+    //ëª¨ë“  ë…¸íŠ¸ ì„ íƒ í•´ì œ (ë‹¨ì¼ ë…¸íŠ¸ ì„ íƒ ì‹œì—ë§Œ ì‚¬ìš©, ê·¸ ì™¸ì— ì‚¬ìš© ì‹œ ê¸°ì¤€ ë…¸íŠ¸ê°€ ì‚¬ë¼ì§€ëŠ” ë¶ˆìƒì‚¬ ë°œìƒ)
     private void DeselectAll()
     {
-        //Ã¹¹øÂ° ¹è¿­ÀÌ »ç¶óÁö¸ç ´ÙÀ½ ¿ä¼Ò°¡ Ã¹¹øÂ° ¹è¿­·Î ÀÌµ¿ÇÏ¹Ç·Î Ç×»ó Ã¹¹øÂ° ¹è¿­¸¸ »èÁ¦ÇÏ¸é µÊ.
+        //ì²«ë²ˆì§¸ ë°°ì—´ì´ ì‚¬ë¼ì§€ë©° ë‹¤ìŒ ìš”ì†Œê°€ ì²«ë²ˆì§¸ ë°°ì—´ë¡œ ì´ë™í•˜ë¯€ë¡œ í•­ìƒ ì²«ë²ˆì§¸ ë°°ì—´ë§Œ ì‚­ì œí•˜ë©´ ë¨.
         int count = editorMgr.selectedNoteList.Count;
         for (int i = 0; i < count; ++i)
         {
@@ -198,7 +197,7 @@ public class TLNoteManager : MonoBehaviour
         editorMgr.selectedNoteList.Clear();
     }
 
-    //³ëÆ® ¼±ÅÃ ÇØÁ¦
+    //ë…¸íŠ¸ ì„ íƒ í•´ì œ
     private void Deselect(TimeLineNote tlNote)
     {
         editorMgr.selectedNoteList.Remove(tlNote);
@@ -206,7 +205,7 @@ public class TLNoteManager : MonoBehaviour
         tlNote.Deselect();
     }
 
-    //selectedNoteList¿¡ ³ëÆ® Ãß°¡
+    //selectedNoteListì— ë…¸íŠ¸ ì¶”ê°€
     private void AddSelectedNote(TimeLineNote tlNote)
     {
         if (editorMgr.selectedNoteList.IndexOf(tlNote) != -1)
@@ -216,13 +215,13 @@ public class TLNoteManager : MonoBehaviour
         editorMgr.selectedNoteList.Add(tlNote);
     }
 
-    //±âÁØ ³ëÆ® ¼³Á¤
+    //ê¸°ì¤€ ë…¸íŠ¸ ì„¤ì •
     private void SetStandardNote(TimeLineNote tlNote, bool doRelease = false)
     {
-        //±âÁ¸ ±âÁØ ³ëÆ®¸¦ ±âÁØ ÇØÁ¦
-        if(editorMgr.standardNote != null)
+        //ê¸°ì¡´ ê¸°ì¤€ ë…¸íŠ¸ë¥¼ ê¸°ì¤€ í•´ì œ
+        if (editorMgr.standardNote != null)
         {
-            if(doRelease == false)
+            if (doRelease == false)
             {
                 editorMgr.standardNote.UnsetStandardNote();
             }
@@ -237,7 +236,7 @@ public class TLNoteManager : MonoBehaviour
     }
 
 
-    //Event.current.currentSelectedGameObjectÀ» °¡Á®¿À´Â ÇÔ¼ö (½¬¿î ÃßÀûÀ» À§ÇØ ÇØ´ç ÇÔ¼ö¸¦ »ç¿ëÇÒ °Í)
+    //Event.current.currentSelectedGameObjectì„ ê°€ì ¸ì˜¤ëŠ” í•¨ìˆ˜ (ì‰¬ìš´ ì¶”ì ì„ ìœ„í•´ í•´ë‹¹ í•¨ìˆ˜ë¥¼ ì‚¬ìš©í•  ê²ƒ)
     private TimeLineNote GetCurrentSelectedNote()
     {
         return EventSystem.current.currentSelectedGameObject.GetComponent<TimeLineNote>();
